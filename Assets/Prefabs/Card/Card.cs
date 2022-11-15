@@ -17,7 +17,7 @@ public class Card : MonoBehaviour
     public string num { get; private set; }
     public int intNum { 
         get { 
-            return NumToString.getNum(num); 
+            return NumWrap.getNum(num); 
         }
     }
     public Source source {
@@ -29,18 +29,20 @@ public class Card : MonoBehaviour
     {
         get
         {
-            return Seed.getSeedColor(seed);
+            return SeedWrap.getSeedColor(seed);
         }
     }
 
     [SerializeField] float textSize = 8;
     [SerializeField] TextMeshPro textNum;
     [SerializeField] SpriteRenderer spriteRenderer;
-    [SerializeField] List<Sprite> spriteSeed;
+    [SerializeField] public List<Sprite> spriteSeed;
+    public static Card staticRef = null;
 
-    void Start()
+    void Awake()
     {
         textSize = textNum.fontSize;
+        if(staticRef == null) staticRef = this;
     }
     public override string ToString()
     {
@@ -54,9 +56,9 @@ public class Card : MonoBehaviour
     void UpdateSprite()
     {
         textNum.text = num;
-        textNum.color = Seed.getSeedColor(seed);
+        textNum.color = SeedWrap.getSeedColor(seed);
         textNum.fontSize = (num == "Q") ? textSize - 1 : textSize;
-        spriteRenderer.sprite = spriteSeed[Seed.getSeedIndex(seed)];
+        spriteRenderer.sprite = spriteSeed[SeedWrap.getSeedIndex(seed)];
     }
     private void Init(string s, string n, Source source)
     {
@@ -66,23 +68,18 @@ public class Card : MonoBehaviour
         selfStruct = new CardStruct(s, n);
         UpdateSprite();
     }
-    [ContextMenu("TestA")]
-    void TestA()
-    {
-        Init(Seed.cuori, "A", Source.DECK);
-    }
 
 #region Public Init Funcs
     public void Init(string s, int n, Source source)
     {
-        s = Seed.Validate(s) ? s : "Wrong";  // "Wrong" seed is handled by Seed getIndex and UpdateSprite -- it shows big red X
-        Init(s, NumToString.getLetter(n), source);
+        s = SeedWrap.Validate(s) ? s : "Wrong";  // "Wrong" seed is handled by Seed getIndex and UpdateSprite -- it shows big red X
+        Init(s, NumWrap.getLetter(n), source);
     }
 
     [ContextMenu("Randomize")]
     public void Init()
     {
-        Init(Seed.getRandomSeed(), NumToString.getRandomNum(), Source.DECK);
+        Init(SeedWrap.getRandomSeed(), NumWrap.getRandomNum(), Source.DECK);
     }
 
     public void Init(Source s)
@@ -114,17 +111,34 @@ public struct CardStruct
     }
 }
 
-static class Seed
+public static class SeedWrap
 {
-    public const string cuori = "Cuori";
-    public const string denari = "Denari";
-    public const string fiori = "Fiori";
-    public const string picche = "Picche";
+    const string cuori = "Cuori";
+    const string denari = "Denari";
+    const string fiori = "Fiori";
+    const string picche = "Picche";
+    
     static string[] seeds = new string[] { cuori, denari, fiori, picche };
 
     static Color redColor = new Color32(194, 25, 36, 255); // same red shade as the sprites
     static Color blackColor = Color.black;
-
+ #region SeedEnum
+    public enum Seed
+    {
+        CUORI,      // 0
+        DENARI,     // 1
+        FIORI,      // 2
+        PICCHE      // 3
+    }
+    public static string getSeedFromEnum(Seed s)
+    {
+        return seeds[(int)s];
+    }
+    public static Seed getEnumFromSeed(string s)
+    {
+        return (Seed)getSeedIndex(s);
+    }
+#endregion
     public static bool Validate(string s)
     {
         return seeds.Contains(s);
@@ -138,7 +152,6 @@ static class Seed
         }
         return seeds.Length;   // if wrong seed, then return 4 to display big red X
     }
-
     public static string getRandomSeed()
     {
         int rand = Random.Range(0, seeds.Length); // max value excluded
@@ -154,7 +167,7 @@ static class Seed
     }
 }
 
-static class NumToString
+static class NumWrap
 {
     public const int minNum = 2;
     public const int maxNum = 14;

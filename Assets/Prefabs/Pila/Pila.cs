@@ -4,27 +4,27 @@ using UnityEngine;
 
 public class Pila : MonoBehaviour
 {
-    static readonly List<string> assignedSeeds = new(4);
-    [SerializeField] string seed = string.Empty;
-    [SerializeField] int topNum = 0;
+    [SerializeField] SpriteRenderer seedSpriteRenderer;
+    [SerializeField] SeedWrap.Seed seed;
+    string seedString { get { return SeedWrap.getSeedFromEnum(seed);  } }
+    int topNum = 0;
     Card c = null;
-    static bool update=false;
 
-    public bool ValidateCard(Card c)    // card is valid if pile is empty or seed is equal and number is next
+    private void Start()
     {
-        bool seedCanBeAssigned = (seed == string.Empty && !assignedSeeds.Contains(c.seed) && c.intNum==1);  // first card must be "A"
-        bool seedAndNumberAreCorrect = (c.seed == seed && c.intNum == topNum + 1);
-        return (seedCanBeAssigned || seedAndNumberAreCorrect);
+        seedSpriteRenderer.sprite = Card.staticRef.spriteSeed[(int)seed];
     }
 
+    public bool ValidateCard(Card c)    // card is valid if seed is equal and number is next
+    {
+        return (c.seed == seedString && c.intNum == topNum + 1);
+    }
     public bool TryAddCard(Card c)
     {
         if (ValidateCard(c)) 
         {
             topNum = c.intNum;
-            seed = c.seed;
-            if(!assignedSeeds.Contains(c.seed)) 
-                assignedSeeds.Add(seed);
+            seed = SeedWrap.getEnumFromSeed(c.seed);
             return true;
         }
         else
@@ -35,33 +35,17 @@ public class Pila : MonoBehaviour
     {
         if(topNum > 0)
             topNum--;
-        if(topNum == 0)
-        {
-            assignedSeeds.Remove(seed);
-            seed = string.Empty;
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        update = false;
-        if (collision.TryGetComponent<Card>(out c) && TryAddCard(c)) 
+        if (collision.TryGetComponent<Card>(out c) && TryAddCard(c))
         {
             c.dragController.isOnCorrectPile = true;
             c.dragController.pilePos = transform.position + Vector3.back * topNum * 2;
-        }            
+        }
         else
             c = null;
-
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if(update && c == null) 
-        {
-            OnTriggerEnter2D(collision);
-            update = false;
-        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -70,7 +54,6 @@ public class Pila : MonoBehaviour
         {
             PopCard(); 
             c.dragController.isOnCorrectPile = false;
-            update = true;
         }
         c = null;       // reset card to null in any case
     }

@@ -32,7 +32,7 @@ public class Column : MonoBehaviour
     Card SpawnCard(float offs)
     {
         Card c = Instantiate(cardPrefab).GetComponent<Card>();
-        c.transform.position = transform.position + Vector3.down * offs + Vector3.back*offs*5;
+        c.transform.position = transform.position + Vector3.down * offs + Vector3.back*(offs+0.1f)*5;
         // transform is spawn position
 
         do
