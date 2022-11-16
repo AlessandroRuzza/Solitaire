@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7384216537878531042}
   - component: {fileID: 231644816342147251}
   - component: {fileID: 7662066594515867995}
+  - component: {fileID: 1033397884919243178}
   m_Layer: 0
   m_Name: Spawn1
   m_TagString: Untagged
@@ -46,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardNum: 1
-  cardOffset: 0.4
+  cardOffset: 0.6
   cardPrefab: {fileID: 6530133199123139919, guid: 12dd910f58d65d342b22930ab8975729, type: 3}
 --- !u!212 &7662066594515867995
 SpriteRenderer:
@@ -100,3 +101,29 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &1033397884919243178
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3625855374971086}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0.32132134, y: 0.3783784, z: 0.2912913, w: 0.35735735}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.3498498, y: 1.3498498}
+    newSize: {x: 1, y: 1.4}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 1
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.4}
+  m_EdgeRadius: 0

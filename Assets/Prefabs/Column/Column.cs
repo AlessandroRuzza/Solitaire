@@ -1,21 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Column : MonoBehaviour
 {
     [SerializeField] int cardNum;
     [SerializeField] float cardOffset;
+    public static float cardVerticalDistance;
     [SerializeField] GameObject cardPrefab;
-
     Card[] cards;
-    int turnedCards;
+    [SerializeField] int turnedCards;
+    public bool isEmpty
+    {   get{
+            return turnedCards > cardNum;
+        }
+    }
 
-    void Start()
+    private void Awake()
     {
         cards = new Card[cardNum];
         turnedCards = 1;
-        Card c;
+        cardVerticalDistance = cardOffset;
+    }
+
+    void Start()
+    {
+        Card c=null;
         for (int i = 0; i < cardNum; i++)
         {
             c = SpawnCard(i * cardOffset);
@@ -32,7 +43,7 @@ public class Column : MonoBehaviour
     Card SpawnCard(float offs)
     {
         Card c = Instantiate(cardPrefab).GetComponent<Card>();
-        c.transform.position = transform.position + Vector3.down * offs + Vector3.back*(offs+0.1f)*5;
+        c.transform.position = transform.position + Vector3.down * offs + Vector3.back*(offs+0.1f)*2;
         // transform is spawn position
 
         do
@@ -50,6 +61,7 @@ public class Column : MonoBehaviour
         turnedCards++;
         if (turnedCards <= cardNum)
         {
+            cards[cardNum - turnedCards+1].dragController.cardPlacedOnPile -= TurnCard;
             Card c = cards[cardNum - turnedCards];
             c.transform.rotation = Quaternion.identity;
             c.dragController.blockMovement = false;

@@ -22,7 +22,6 @@ public class Card : MonoBehaviour
     }
     public Source source {
         get { return dragController.source; }
-        set { dragController.source = source; } 
     }
     CardStruct selfStruct;
     public Color color
@@ -30,6 +29,11 @@ public class Card : MonoBehaviour
         get
         {
             return SeedWrap.getSeedColor(seed);
+        }
+    }
+    public bool hasChildCard
+    {   get {
+            return transform.GetComponentsInChildren<Card>().Length > 1;
         }
     }
 
@@ -64,11 +68,10 @@ public class Card : MonoBehaviour
     {
         num = n;
         seed = s;
-        this.source = source;
+        dragController.source = source;
         selfStruct = new CardStruct(s, n);
         UpdateSprite();
     }
-
 #region Public Init Funcs
     public void Init(string s, int n, Source source)
     {
@@ -81,13 +84,11 @@ public class Card : MonoBehaviour
     {
         Init(SeedWrap.getRandomSeed(), NumWrap.getRandomNum(), Source.DECK);
     }
-
     public void Init(Source s)
     {
-        Init(); // still random 
-        source = s; // apply source 
+        Init();
+        dragController.source = s; // apply source 
     }
-
     public void Init(Card c)
     {
         Init(c.seed, c.num, c.source);
@@ -97,6 +98,11 @@ public class Card : MonoBehaviour
         Init(c.seed, c.num, Source.DECK);
     }
 #endregion
+
+    public bool CanBePlacedOn(Card c)
+    {
+        return !c.hasChildCard && !c.dragController.blockMovement && c.color != color && c.intNum == intNum + 1 && c.source == Source.COLUMN;
+    }
 }
 
 public struct CardStruct

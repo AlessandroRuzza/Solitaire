@@ -29,13 +29,15 @@ public class DragController : MonoBehaviour
     void OnMouseUp()
     {
         if (blockMovement) return;
-        if (!isOnCorrectPile)
-            transform.position = spawnPos;
-        else
+        if (isOnCorrectPile)
         {
             transform.position = pilePos;
             blockMovement = true;
             if (cardPlacedOnPile != null) cardPlacedOnPile();
+        }
+        else
+        {
+            transform.position = spawnPos;
         }
     }
 
