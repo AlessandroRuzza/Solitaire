@@ -70,6 +70,7 @@ public class Card : MonoBehaviour
         seed = s;
         dragController.source = source;
         selfStruct = new CardStruct(s, n);
+        gameObject.name = ToString();
         UpdateSprite();
     }
 #region Public Init Funcs
@@ -114,6 +115,10 @@ public struct CardStruct
     {
         seed = s;
         num = n;
+    }
+    public override string ToString()
+    {
+        return num + " di " + seed + "  (n: " + NumWrap.getNum(num) + ")";
     }
 }
 

@@ -22,10 +22,7 @@ public class Column : MonoBehaviour
         cards = new Card[cardNum];
         turnedCards = 1;
         cardVerticalDistance = cardOffset;
-    }
 
-    void Start()
-    {
         Card c=null;
         for (int i = 0; i < cardNum; i++)
         {

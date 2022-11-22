@@ -859,25 +859,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3408310726038763161, guid: a3585ddf06bebf04c8a0920b5b55af9e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3408310727218275961, guid: a3585ddf06bebf04c8a0920b5b55af9e, type: 3}
       propertyPath: m_RootOrder
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3408310727218275961, guid: a3585ddf06bebf04c8a0920b5b55af9e, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 3408310727218275961, guid: a3585ddf06bebf04c8a0920b5b55af9e, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 3408310727218275961, guid: a3585ddf06bebf04c8a0920b5b55af9e, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 3408310727218275961, guid: a3585ddf06bebf04c8a0920b5b55af9e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -918,10 +902,6 @@ PrefabInstance:
     - target: {fileID: 3408310727218275961, guid: a3585ddf06bebf04c8a0920b5b55af9e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3408310727218275961, guid: a3585ddf06bebf04c8a0920b5b55af9e, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3408310727218275962, guid: a3585ddf06bebf04c8a0920b5b55af9e, type: 3}
       propertyPath: m_Name
@@ -1312,6 +1292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: 0
+  spawnPos: {x: 0, y: 0, z: 0}
   isOnCorrectPile: 0
   pilePos: {x: 0, y: 0, z: 0}
   blockMovement: 0

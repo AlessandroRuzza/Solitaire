@@ -6,7 +6,7 @@ public class DragController : MonoBehaviour
     public Action cardPlacedOnPile = null;
     public Source source;
     Vector3 offset = Vector3.zero;
-    Vector3 spawnPos;
+    [SerializeField] Vector3 spawnPos;
     public bool isOnCorrectPile = false;
     public Vector3 pilePos;
     public bool blockMovement = false;
@@ -34,6 +34,7 @@ public class DragController : MonoBehaviour
             transform.position = pilePos;
             blockMovement = true;
             if (cardPlacedOnPile != null) cardPlacedOnPile();
+            spawnPos = transform.position;
         }
         else
         {

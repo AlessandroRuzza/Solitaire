@@ -22,10 +22,10 @@ public class CardCollider : MonoBehaviour
         if (!card.hasChildCard && collision.TryGetComponent<Pile>(out Pile p) && p.ValidateCard(card))
         {  
             // Card has collided with a Pile where it can be placed
+            correctPile = p;
             dragController.isOnCorrectPile = true;
             dragController.pilePos = p.pileTop;
             dragController.cardPlacedOnPile += PlaceOnPile;
-            correctPile = p;
         }
         // delete "correctCard == null" to have correctCard update to last hit
         else if (correctCard == null && collision.TryGetComponent<Card>(out Card c) && card.CanBePlacedOn(c)) 
@@ -62,12 +62,13 @@ public class CardCollider : MonoBehaviour
         }
         else if (collision.TryGetComponent<Card>(out Card c) && c == correctCard)
         {
-            dragController.cardPlacedOnPile -= PlaceOnCard;
             dragController.isOnCorrectPile = false;
+            dragController.cardPlacedOnPile -= PlaceOnCard;
             correctCard = null;
         }
         else if (card.num == "K" && collision.TryGetComponent<Column>(out Column col) && col.isEmpty)
         {
+            dragController.cardPlacedOnPile -= PlaceOnColumn;
             dragController.isOnCorrectPile = false;
         }
     }
@@ -81,6 +82,7 @@ public class CardCollider : MonoBehaviour
     }
     void PlaceOnPile()
     {
+        transform.SetParent(null);
         correctPile.TryAddCard(card);
     }
     void PlaceOnColumn()
