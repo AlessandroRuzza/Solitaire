@@ -16,6 +16,7 @@ public class Column : MonoBehaviour
             return turnedCards > cardNum;
         }
     }
+    public bool canKBePlaced=false;
 
     private void Awake()
     {
@@ -63,5 +64,7 @@ public class Column : MonoBehaviour
             c.transform.rotation = Quaternion.identity;
             c.dragController.blockMovement = false;
         }
+        else if(turnedCards == cardNum+1) // on last card leaving the column
+            canKBePlaced=true;
     }
 }

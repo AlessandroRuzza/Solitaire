@@ -109,7 +109,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6530133197427443879}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.375, z: -0.2}
+  m_LocalPosition: {x: 0, y: -0.375, z: -0.1}
   m_LocalScale: {x: 0.10620016, y: 0.1062002, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -339,6 +339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: 0
+  spawnPos: {x: 0, y: 0, z: 0}
   isOnCorrectPile: 0
   pilePos: {x: 0, y: 0, z: 0}
   blockMovement: 0

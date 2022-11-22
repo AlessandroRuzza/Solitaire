@@ -8,6 +8,7 @@ public class CardCollider : MonoBehaviour
     DragController dragController;
     Pile correctPile;
     Card correctCard;
+    Column correctColumn;
     static Vector3 verticalOffset;
 
     private void Awake()
@@ -36,19 +37,25 @@ public class CardCollider : MonoBehaviour
             dragController.pilePos = c.transform.position + verticalOffset;
             dragController.cardPlacedOnPile += PlaceOnCard;
         }
-        else if(card.num == "K" && collision.TryGetComponent<Column>(out Column col) && col.isEmpty)
+        else if(card.num == "K" && collision.TryGetComponent<Column>(out Column col) && col.canKBePlaced)
         {
+            correctColumn = col;
             dragController.isOnCorrectPile = true;
             dragController.pilePos = col.transform.position + Vector3.back * 0.2f;
             dragController.cardPlacedOnPile += PlaceOnColumn;
+            col.canKBePlaced = false;
         }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (correctCard == null && collision.TryGetComponent<Card>(out Card c) && card.CanBePlacedOn(c))
+        if (card.num != "K" && correctCard == null && collision.TryGetComponent<Card>(out Card c) && card.CanBePlacedOn(c))
         {
             OnTriggerEnter2D(collision);    // fixes double collision problems after exiting the second one
+        }
+        else if(correctColumn == null && card.num == "K" && collision.TryGetComponent<Column>(out Column col) && col.canKBePlaced)
+        {
+            OnTriggerEnter2D(collision);    // fixes double collision problems for columns
         }
     }
 
@@ -66,10 +73,12 @@ public class CardCollider : MonoBehaviour
             dragController.cardPlacedOnPile -= PlaceOnCard;
             correctCard = null;
         }
-        else if (card.num == "K" && collision.TryGetComponent<Column>(out Column col) && col.isEmpty)
+        else if (card.num == "K" && collision.TryGetComponent<Column>(out Column col) && col == correctColumn)
         {
+            correctColumn.canKBePlaced = true;
             dragController.cardPlacedOnPile -= PlaceOnColumn;
             dragController.isOnCorrectPile = false;
+            correctColumn = null;
         }
     }
 

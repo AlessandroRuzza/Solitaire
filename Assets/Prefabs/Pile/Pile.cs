@@ -11,7 +11,7 @@ public class Pile : MonoBehaviour
 
     public Vector3 pileTop
     {   get{
-            return transform.position + Vector3.back * (topNum+1) * 2;
+            return transform.position + Vector3.back * (topNum+1) * 0.3f;
         }
     }
 

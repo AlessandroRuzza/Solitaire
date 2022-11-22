@@ -37,7 +37,8 @@ public class Deck : MonoBehaviour
 
         AddToText(-1);
         if(intText == 0) { Debug.Log("Finished turning Deck. Next card is: " + deck.Peek().ToString()); }
-        if(intText < 0) { ResetText(); }
+        if(intText < 0) { ResetText(); AddToText(-1); }
+        if(intText < 0) { SetTextZero(); } // if it's -1 even after reset, set to 0
 
         if (deck.Count == 0 && usedCards.Count >= deckSize) // if deck is empty and all cards were used, don't draw
         {
@@ -71,6 +72,10 @@ public class Deck : MonoBehaviour
     void AddToText(int n)
     {
         textCount.text = (int.Parse(textCount.text) + n).ToString();
+        textCount.SetMaterialDirty();
+    }
+    void SetTextZero(){
+        textCount.text = "0";
         textCount.SetMaterialDirty();
     }
 }
