@@ -1208,6 +1208,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ConfirmWindow
       objectReference: {fileID: 0}
+    - target: {fileID: 5760702244646681822, guid: e664af07d82f13041a7f69036493a208, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5760702244646681823, guid: e664af07d82f13041a7f69036493a208, type: 3}
       propertyPath: m_RootOrder
       value: 8

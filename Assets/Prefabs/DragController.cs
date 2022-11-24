@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class DragController : MonoBehaviour
 {
+    static Action setSpawnPos = null;
     public Action cardPlacedOnPile = null;
     public Action cardPlacedOnCard = null;
     public Action cardPlacedOnCol = null;
@@ -17,46 +18,62 @@ public class DragController : MonoBehaviour
     public Vector3 colPos;
     public bool blockMovement = false;
 
+    private void Awake()
+    {
+        setSpawnPos += SetSpawnPos;
+    }
+    private void OnDestroy()
+    {
+        setSpawnPos -= SetSpawnPos;
+        cardPlacedOnPile = null;
+        cardPlacedOnCard = null;
+        cardPlacedOnCol = null;
+    }
+    void SetSpawnPos()
+    {
+        spawnPos = transform.position;
+    }
+
     void OnMouseDown()
     {
         if (blockMovement) return;
         offset = transform.position - getMousePos();
-        spawnPos = transform.position;
+        SetSpawnPos();
 
         transform.position += Vector3.back * 100;
     }
-
     void OnMouseDrag()
     {
         if (blockMovement) return;
         transform.position = getMousePos() + offset;
     }
-
     void OnMouseUp()
     {
         if (blockMovement) return;
-        if (isOnCorrectPile)                    // sets priority:  Pile >> Card >> Col
+        if (isOnCorrectPile)                    // placement priority:  Pile >> Card >> Col
         {
             transform.position = pilePos;
             blockMovement = true;
             transform.SetParent(null);
             if (cardPlacedOnPile != null) cardPlacedOnPile();
-            spawnPos = transform.position;
         }
         else if (isOnCorrectCard)
         {
             transform.position = cardPos;
             if (cardPlacedOnCard != null) cardPlacedOnCard();
+            SetAllSpawnPos(name);
         }
         else if (isOnCorrectCol)
         {
             transform.position = colPos;
             if (cardPlacedOnCol != null) cardPlacedOnCol();
+            SetAllSpawnPos(name);
         }
         else
         {
             transform.position = spawnPos;
         }
+        SetSpawnPos();  // in any case, update spawnPos
     }
 
     Vector3 getMousePos()   // get mouse position in world coords, ignoring z
@@ -64,5 +81,12 @@ public class DragController : MonoBehaviour
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = transform.position.z;
         return mousePos;
+    }
+    static void SetAllSpawnPos(string name)
+    {
+        if (setSpawnPos != null) setSpawnPos();  // calls Action: sets spawnPos of every Card on the field to its transform.position
+        else Debug.LogError("setSpawnPos was null! called by " + name);
+        // setSpawnPos should never be empty: it invokes at least this instance's function
+
     }
 }
