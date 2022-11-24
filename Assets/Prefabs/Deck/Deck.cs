@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -21,18 +22,17 @@ public class Deck : MonoBehaviour
     {
         ResetText();
     }
+    void OnDestroy()
+    {
+        usedCards.Clear();    
+    }
 
     void OnMouseDown()
     {
-        if (currentCard != null)
+        if (currentCard != null && !usedCards.Contains(currentCard.ToStruct()))
         {
-            if (currentCard.transform.position == cardSpawnTransform.position)
-            {
-                deck.Enqueue(currentCard.ToStruct());
-                Destroy(currentCard.gameObject);
-            }
-            else
-                usedCards.Add(currentCard.ToStruct());
+            deck.Enqueue(currentCard.ToStruct());
+            Destroy(currentCard.gameObject);
         }
 
         AddToText(-1);

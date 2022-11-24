@@ -33,16 +33,16 @@ public class CardCollider : MonoBehaviour
         {
             // Card has collided with a Card on a column where it can be placed
             correctCard = c;
-            dragController.isOnCorrectPile = true;
-            dragController.pilePos = c.transform.position + verticalOffset;
-            dragController.cardPlacedOnPile += PlaceOnCard;
+            dragController.isOnCorrectCard = true;
+            dragController.cardPos = c.transform.position + verticalOffset;
+            dragController.cardPlacedOnCard += PlaceOnCard;
         }
         else if(card.num == "K" && collision.TryGetComponent<Column>(out Column col) && col.canKBePlaced)
         {
             correctColumn = col;
-            dragController.isOnCorrectPile = true;
-            dragController.pilePos = col.transform.position + Vector3.back * 0.2f;
-            dragController.cardPlacedOnPile += PlaceOnColumn;
+            dragController.isOnCorrectCol = true;
+            dragController.colPos = col.transform.position + Vector3.back * 0.2f;
+            dragController.cardPlacedOnCol += PlaceOnColumn;
             col.canKBePlaced = false;
         }
     }
@@ -53,7 +53,7 @@ public class CardCollider : MonoBehaviour
         {
             OnTriggerEnter2D(collision);    // fixes double collision problems after exiting the second one
         }
-        else if(correctColumn == null && card.num == "K" && collision.TryGetComponent<Column>(out Column col) && col.canKBePlaced)
+        else if(card.num == "K" && correctColumn == null && collision.TryGetComponent<Column>(out Column col) && col.canKBePlaced)
         {
             OnTriggerEnter2D(collision);    // fixes double collision problems for columns
         }
@@ -69,15 +69,15 @@ public class CardCollider : MonoBehaviour
         }
         else if (collision.TryGetComponent<Card>(out Card c) && c == correctCard)
         {
-            dragController.isOnCorrectPile = false;
-            dragController.cardPlacedOnPile -= PlaceOnCard;
+            dragController.cardPlacedOnCard -= PlaceOnCard;
+            dragController.isOnCorrectCard = false;
             correctCard = null;
         }
         else if (card.num == "K" && collision.TryGetComponent<Column>(out Column col) && col == correctColumn)
         {
             correctColumn.canKBePlaced = true;
-            dragController.cardPlacedOnPile -= PlaceOnColumn;
-            dragController.isOnCorrectPile = false;
+            dragController.cardPlacedOnCol -= PlaceOnColumn;
+            dragController.isOnCorrectCol = false;
             correctColumn = null;
         }
     }
@@ -86,17 +86,16 @@ public class CardCollider : MonoBehaviour
     {
         transform.SetParent(correctCard.transform);
         transform.position += Vector3.back;
-        dragController.blockMovement = false;
-        dragController.source = Source.COLUMN;
+        PlaceOnColumn();    // does the same things, only difference is setting parent and offsetting position
     }
     void PlaceOnPile()
     {
-        transform.SetParent(null);
-        correctPile.TryAddCard(card);
+        if (dragController.source == Source.DECK) Deck.usedCards.Add(card.ToStruct());
+        correctPile.AddCard(card);
     }
     void PlaceOnColumn()
     {
-        dragController.blockMovement = false;
+        if (dragController.source == Source.DECK) Deck.usedCards.Add(card.ToStruct());
         dragController.source = Source.COLUMN;
     }
 }

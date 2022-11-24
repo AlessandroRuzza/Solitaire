@@ -4,11 +4,17 @@ using UnityEngine;
 public class DragController : MonoBehaviour
 {
     public Action cardPlacedOnPile = null;
+    public Action cardPlacedOnCard = null;
+    public Action cardPlacedOnCol = null;
     public Source source;
     Vector3 offset = Vector3.zero;
     [SerializeField] Vector3 spawnPos;
     public bool isOnCorrectPile = false;
+    public bool isOnCorrectCard = false;
+    public bool isOnCorrectCol = false;
     public Vector3 pilePos;
+    public Vector3 cardPos;
+    public Vector3 colPos;
     public bool blockMovement = false;
 
     void OnMouseDown()
@@ -29,12 +35,23 @@ public class DragController : MonoBehaviour
     void OnMouseUp()
     {
         if (blockMovement) return;
-        if (isOnCorrectPile)
+        if (isOnCorrectPile)                    // sets priority:  Pile >> Card >> Col
         {
             transform.position = pilePos;
             blockMovement = true;
+            transform.SetParent(null);
             if (cardPlacedOnPile != null) cardPlacedOnPile();
             spawnPos = transform.position;
+        }
+        else if (isOnCorrectCard)
+        {
+            transform.position = cardPos;
+            if (cardPlacedOnCard != null) cardPlacedOnCard();
+        }
+        else if (isOnCorrectCol)
+        {
+            transform.position = colPos;
+            if (cardPlacedOnCol != null) cardPlacedOnCol();
         }
         else
         {

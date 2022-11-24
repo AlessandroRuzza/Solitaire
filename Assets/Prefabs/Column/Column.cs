@@ -51,6 +51,8 @@ public class Column : MonoBehaviour
 
         Deck.usedCards.Add(c.ToStruct());
         c.dragController.cardPlacedOnPile += TurnCard;
+        c.dragController.cardPlacedOnCard += TurnCard;
+        c.dragController.cardPlacedOnCol += TurnCard;
         return c;
     }
 
@@ -60,6 +62,8 @@ public class Column : MonoBehaviour
         if (turnedCards <= cardNum)
         {
             cards[cardNum - turnedCards+1].dragController.cardPlacedOnPile -= TurnCard;
+            cards[cardNum - turnedCards+1].dragController.cardPlacedOnCard -= TurnCard;
+            cards[cardNum - turnedCards+1].dragController.cardPlacedOnCol -= TurnCard;
             Card c = cards[cardNum - turnedCards];
             c.transform.rotation = Quaternion.identity;
             c.dragController.blockMovement = false;
