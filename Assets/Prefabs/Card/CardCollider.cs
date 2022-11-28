@@ -11,11 +11,11 @@ public class CardCollider : MonoBehaviour
     Column correctColumn;
     static Vector3 verticalOffset;
 
-    private void Awake()
+    private void Start()
     {
         card = GetComponent<Card>();
         dragController = GetComponent<DragController>();
-        verticalOffset = Vector3.down * Column.cardVerticalDistance;
+        verticalOffset = Vector3.down * Mathf.Max(Column.cardVerticalDistance, 0.55f);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

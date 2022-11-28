@@ -56,18 +56,21 @@ public class DragController : MonoBehaviour
             blockMovement = true;
             transform.SetParent(null);
             if (cardPlacedOnPile != null) cardPlacedOnPile();
+            isOnCorrectPile = false;
         }
         else if (isOnCorrectCard)
         {
             transform.position = cardPos;
             if (cardPlacedOnCard != null) cardPlacedOnCard();
             SetAllSpawnPos(name);
+            isOnCorrectCard = false;
         }
         else if (isOnCorrectCol)
         {
             transform.position = colPos;
             if (cardPlacedOnCol != null) cardPlacedOnCol();
             SetAllSpawnPos(name);
+            isOnCorrectCol = false;
         }
         else
         {

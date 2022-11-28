@@ -43,10 +43,17 @@ public class Card : MonoBehaviour
     [SerializeField] public List<Sprite> spriteSeed;
     public static Card staticRef = null;
 
+    // testing debug variables
+    [SerializeField] bool doDebug;
+    [SerializeField] string debugNum;
+    [SerializeField] SeedWrap.Seed debugSeed;
+    [SerializeField] Source debugSource;
+
     void Awake()
     {
         textSize = textNum.fontSize;
         if(staticRef == null) staticRef = this;
+        if (doDebug) ApplyDebugVars();
     }
     public override string ToString()
     {
@@ -97,6 +104,14 @@ public class Card : MonoBehaviour
     public void Init(CardStruct c)
     {
         Init(c.seed, c.num, Source.DECK);
+    }
+    #endregion
+
+#region Debug Funcs
+    [ContextMenu("Set to Debug Variables")]
+    public void ApplyDebugVars()
+    {
+        Init(SeedWrap.getSeedFromEnum(debugSeed), debugNum, debugSource);
     }
 #endregion
 
