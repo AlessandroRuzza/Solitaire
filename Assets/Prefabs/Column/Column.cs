@@ -6,8 +6,7 @@ using UnityEngine;
 public class Column : MonoBehaviour
 {
     [SerializeField] int cardNum;
-    [SerializeField] float cardOffset;
-    public static float cardVerticalDistance;
+    public static float cardOffset = 0.6f;
     [SerializeField] GameObject cardPrefab;
     Card[] cards;
     [SerializeField] int turnedCards;
@@ -17,12 +16,17 @@ public class Column : MonoBehaviour
         }
     }
     public bool canKBePlaced=false;
+    [SerializeField] bool debug_DoNotSpawnCards;
 
     private void Awake()
     {
         cards = new Card[cardNum];
         turnedCards = 1;
-        cardVerticalDistance = cardOffset;
+    }
+
+    private void Start()
+    {
+        if (debug_DoNotSpawnCards) return;
 
         Card c=null;
         for (int i = 0; i < cardNum; i++)
@@ -61,14 +65,14 @@ public class Column : MonoBehaviour
         turnedCards++;
         if (turnedCards <= cardNum)
         {
-            cards[cardNum - turnedCards+1].dragController.cardPlacedOnPile -= TurnCard;
-            cards[cardNum - turnedCards+1].dragController.cardPlacedOnCard -= TurnCard;
-            cards[cardNum - turnedCards+1].dragController.cardPlacedOnCol -= TurnCard;
+            cards[cardNum - turnedCards + 1].dragController.cardPlacedOnPile -= TurnCard;
+            cards[cardNum - turnedCards + 1].dragController.cardPlacedOnCard -= TurnCard;
+            cards[cardNum - turnedCards + 1].dragController.cardPlacedOnCol -= TurnCard;
             Card c = cards[cardNum - turnedCards];
             c.transform.rotation = Quaternion.identity;
             c.dragController.blockMovement = false;
         }
-        else if(turnedCards == cardNum+1) // on last card leaving the column
-            canKBePlaced=true;
+        else if (turnedCards == cardNum + 1) // on last card leaving the column
+            canKBePlaced = true; ;
     }
 }

@@ -9,13 +9,14 @@ public class CardCollider : MonoBehaviour
     Pile correctPile;
     Card correctCard;
     Column correctColumn;
+    Column oldColumn;
     static Vector3 verticalOffset;
 
-    private void Start()
+    private void Awake()
     {
         card = GetComponent<Card>();
         dragController = GetComponent<DragController>();
-        verticalOffset = Vector3.down * Mathf.Max(Column.cardVerticalDistance, 0.55f);
+        verticalOffset = Vector3.down * Mathf.Max(Column.cardOffset, 0.55f);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -37,13 +38,12 @@ public class CardCollider : MonoBehaviour
             dragController.cardPos = c.transform.position + verticalOffset;
             dragController.cardPlacedOnCard += PlaceOnCard;
         }
-        else if(card.num == "K" && collision.TryGetComponent<Column>(out Column col) && col.canKBePlaced)
+        else if(correctColumn == null && card.num == "K" && collision.TryGetComponent<Column>(out Column col) && col.canKBePlaced)
         {
             correctColumn = col;
             dragController.isOnCorrectCol = true;
             dragController.colPos = col.transform.position + Vector3.back * 0.2f;
             dragController.cardPlacedOnCol += PlaceOnColumn;
-            col.canKBePlaced = false;
         }
     }
 
@@ -75,7 +75,7 @@ public class CardCollider : MonoBehaviour
         }
         else if (card.num == "K" && collision.TryGetComponent<Column>(out Column col) && col == correctColumn)
         {
-            correctColumn.canKBePlaced = true;
+            //correctColumn.canKBePlaced = true;
             dragController.cardPlacedOnCol -= PlaceOnColumn;
             dragController.isOnCorrectCol = false;
             correctColumn = null;
@@ -84,16 +84,23 @@ public class CardCollider : MonoBehaviour
 
     void PlaceOnCard()
     {
+        AddToUsed();
         transform.SetParent(correctCard.transform);
-        transform.position += Vector3.back;
-        PlaceOnColumn();    // does the same things, only difference is setting parent and offsetting position
+        transform.position += Vector3.back; 
     }
     void PlaceOnPile()
     {
-        if (dragController.source == Source.DECK) Deck.usedCards.Add(card.ToStruct());
+        AddToUsed();
         correctPile.AddCard(card);
     }
     void PlaceOnColumn()
+    {
+        AddToUsed();
+        if (oldColumn != null) oldColumn.canKBePlaced = true;
+        correctColumn.canKBePlaced = false;
+        oldColumn = correctColumn;
+    }
+    void AddToUsed()
     {
         if (dragController.source == Source.DECK) Deck.usedCards.Add(card.ToStruct());
         dragController.source = Source.COLUMN;
